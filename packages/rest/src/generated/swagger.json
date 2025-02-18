@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Credo REST API",
-    "version": "0.9.5",
+    "version": "0.10.0",
     "description": "Rest API for using Credo over HTTP",
     "license": {
       "name": "Apache-2.0"
@@ -7771,6 +7771,12 @@
         ],
         "type": "string"
       },
+      "OpenId4VciCredentialFormatProfile.JwtVcJson": {
+        "enum": [
+          "jwt_vc_json"
+        ],
+        "type": "string"
+      },
       "Did": {
         "type": "string"
       },
@@ -7796,7 +7802,14 @@
             "example": "ExampleCredentialSdJwtVc"
           },
           "format": {
-            "$ref": "#/components/schemas/OpenId4VciCredentialFormatProfile.SdJwtVc",
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OpenId4VciCredentialFormatProfile.SdJwtVc"
+              },
+              {
+                "$ref": "#/components/schemas/OpenId4VciCredentialFormatProfile.JwtVcJson"
+              }
+            ],
             "description": "The format of the credential that is being offered.\nMUST match the format of the `credential_supported` entry."
           },
           "issuer": {
@@ -7856,8 +7869,7 @@
           "credentialSupportedId",
           "format",
           "issuer",
-          "payload",
-          "disclosureFrame"
+          "payload"
         ],
         "type": "object",
         "additionalProperties": false

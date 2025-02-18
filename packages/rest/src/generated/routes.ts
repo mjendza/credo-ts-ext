@@ -1161,6 +1161,11 @@ const models: TsoaRoute.Models = {
         "enums": ["vc+sd-jwt"],
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OpenId4VciCredentialFormatProfile.JwtVcJson": {
+        "dataType": "refEnum",
+        "enums": ["jwt_vc_json"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Did": {
         "dataType": "refAlias",
         "type": {"dataType":"string","validators":{}},
@@ -1175,10 +1180,10 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "credentialSupportedId": {"dataType":"string","required":true},
-            "format": {"ref":"OpenId4VciCredentialFormatProfile.SdJwtVc","required":true},
+            "format": {"dataType":"union","subSchemas":[{"ref":"OpenId4VciCredentialFormatProfile.SdJwtVc"},{"ref":"OpenId4VciCredentialFormatProfile.JwtVcJson"}],"required":true},
             "issuer": {"dataType":"nestedObjectLiteral","nestedProperties":{"didUrl":{"ref":"Did","required":true},"method":{"dataType":"enum","enums":["did"],"required":true}},"required":true},
             "payload": {"dataType":"nestedObjectLiteral","nestedProperties":{"vct":{"dataType":"string"}},"additionalProperties":{"dataType":"any"},"required":true},
-            "disclosureFrame": {"ref":"DisclosureFrame","required":true},
+            "disclosureFrame": {"dataType":"union","subSchemas":[{"ref":"DisclosureFrame"},{"dataType":"undefined"}],"required":true},
         },
         "additionalProperties": false,
     },

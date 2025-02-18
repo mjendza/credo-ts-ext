@@ -72,3 +72,10 @@ We welcome you to join our mailing list and Discord channel. See the [Wiki](http
 ## License
 
 Credo is licensed under the [Apache License Version 2.0 (Apache-2.0)](/LICENSE).
+
+
+##MJ
+needed run (install node-gyp)
+npm install -g node-gyp
+
+before `yarn install`

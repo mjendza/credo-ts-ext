@@ -104,7 +104,7 @@ export interface OpenId4VcIssuanceSessionCreateOfferSdJwtCredentialOptions {
    *
    * @example {@link OpenId4VciCredentialFormatProfile.SdJwtVc}
    */
-  format: OpenId4VciCredentialFormatProfile.SdJwtVc
+  format: OpenId4VciCredentialFormatProfile.SdJwtVc | OpenId4VciCredentialFormatProfile.JwtVcJson
 
   /**
    * The issuer of the credential.
@@ -152,7 +152,7 @@ export interface OpenId4VcIssuanceSessionCreateOfferSdJwtCredentialOptions {
    *   }
    * }
    */
-  disclosureFrame: DisclosureFrame
+  disclosureFrame: DisclosureFrame | undefined
 }
 
 /**

@@ -14,7 +14,7 @@ const run = async () => {
       },
     ],
     logLevel: LogLevel.debug,
-    endpoints: ['http://localhost:3001'],
+    endpoints: ['https://tunnel.factorlabs.pl'],
     walletConfig: {
       id: 'test-agent',
       key: 'test-agent',
@@ -32,7 +32,7 @@ const run = async () => {
 
   const { start } = await setupApp({
     baseApp: app,
-    adminPort: 3000,
+    adminPort: 5000,
     enableCors: true,
 
     agent,

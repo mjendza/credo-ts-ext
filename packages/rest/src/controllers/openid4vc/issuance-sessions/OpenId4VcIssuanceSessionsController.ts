@@ -60,7 +60,7 @@ export class OpenId4VcIssuanceSessionsController extends Controller {
           ...c,
           payload: {
             ...c.payload,
-            vct: c.payload.vct ?? credentialSupported.vct,
+            vct: c.payload.vct ?? undefined,
           },
         } satisfies OpenId4VcIssuanceSessionCreateOfferSdJwtCredentialOptions
       })

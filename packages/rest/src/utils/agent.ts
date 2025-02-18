@@ -17,6 +17,7 @@ import {
 import { AskarModule, AskarMultiWalletDatabaseScheme } from '@credo-ts/askar'
 import { CheqdModule, CheqdDidResolver, CheqdDidRegistrar, CheqdAnonCredsRegistry } from '@credo-ts/cheqd'
 import {
+  W3cCredential,
   V2CredentialProtocol,
   V2ProofProtocol,
   ConnectionsModule,
@@ -133,6 +134,57 @@ export function getAgentModules(options: {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 disclosureFrame: firstCredential.disclosureFrame as any,
                 hashingAlgorithm: 'sha-256',
+              }
+            }
+            if (firstCredential.format === 'jwt_vc_json') {
+              return {
+                format: firstCredential.format === 'jwt_vc_json' ? 'jwt_vc' : 'ldp_vc',
+                holder: holderBinding,
+                verificationMethod: 'dsadsa',
+                issuer: firstCredential.issuer,
+                //credentialSupportedId: firstCredential.credentialSupportedId,
+                credential: W3cCredential.fromJson({
+                  // FIXME: we need to include/cache default contexts in AFJ
+                  // It quite slow the first time now
+                  // And not secure
+                  '@context': ['https://www.w3.org/2018/credentials/v1'],
+                  // TODO: should 'VerifiableCredential' be in the issuer metadata type?
+                  // FIXME: jwt verification did not fail when this was array within array
+                  // W3cCredential is not validated in AFJ???
+                  type: ['VerifiableCredential', ...firstCredential.credentialSupportedId],
+                  issuanceDate: new Date().toISOString(),
+                  //issuer: parseDid(issuerDidUrl).did,
+                  credentialSubject: {
+                    //id: parseDid(holderBinding.didUrl).did,
+                    playground: {
+                      framework: 'Aries Framework JavaScript',
+                      language: 'TypeScript',
+                      version: '1.0',
+                      createdBy: 'Animo Solutions',
+                    },
+                  },
+                }),
+                payload: W3cCredential.fromJson({
+                  // FIXME: we need to include/cache default contexts in AFJ
+                  // It quite slow the first time now
+                  // And not secure
+                  '@context': ['https://www.w3.org/2018/credentials/v1'],
+                  // TODO: should 'VerifiableCredential' be in the issuer metadata type?
+                  // FIXME: jwt verification did not fail when this was array within array
+                  // W3cCredential is not validated in AFJ???
+                  type: ['VerifiableCredential', ...firstCredential.credentialSupportedId],
+                  issuanceDate: new Date().toISOString(),
+                  //issuer: parseDid(issuerDidUrl).did,
+                  credentialSubject: {
+                    //id: parseDid(holderBinding.didUrl).did,
+                    playground: {
+                      framework: 'Aries Framework JavaScript',
+                      language: 'TypeScript',
+                      version: '1.0',
+                      createdBy: 'Animo Solutions',
+                    },
+                  },
+                }),
               }
             }
 
