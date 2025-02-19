@@ -1,7 +1,7 @@
 import type { OpenId4VcIssuanceSessionCreateOfferSdJwtCredentialOptions } from '../controllers/openid4vc/issuance-sessions/OpenId4VcIssuanceSessionsControllerTypes'
 import type { AnonCredsRegistry } from '@credo-ts/anoncreds'
 import type { NetworkConfig as CheqdNetworkConfig } from '@credo-ts/cheqd/build/CheqdModuleConfig'
-import type { Agent, AutoAcceptCredential, AutoAcceptProof } from '@credo-ts/core'
+import { Agent, AutoAcceptCredential, AutoAcceptProof, parseDid } from "@credo-ts/core";
 import type { IndyVdrPoolConfig } from '@credo-ts/indy-vdr'
 import type { TenantAgent } from '@credo-ts/tenants/build/TenantAgent'
 
@@ -45,6 +45,7 @@ import { TenantsModule } from '@credo-ts/tenants'
 import { anoncreds } from '@hyperledger/anoncreds-nodejs'
 import { ariesAskar } from '@hyperledger/aries-askar-nodejs'
 import { indyVdr } from '@hyperledger/indy-vdr-nodejs'
+import { OpenId4VcCredentialHolderDidBinding } from "@credo-ts/openid4vc/build/shared/models/CredentialHolderBinding";
 
 export type { CheqdNetworkConfig }
 type ModulesWithoutTenants = Omit<ReturnType<typeof getAgentModules>, 'tenants'>
@@ -137,11 +138,12 @@ export function getAgentModules(options: {
               }
             }
             if (firstCredential.format === 'jwt_vc_json') {
+              const holderDid = holderBinding as OpenId4VcCredentialHolderDidBinding
               return {
                 format: firstCredential.format === 'jwt_vc_json' ? 'jwt_vc' : 'ldp_vc',
                 holder: holderBinding,
-                verificationMethod: 'dsadsa',
-                issuer: firstCredential.issuer,
+                verificationMethod: firstCredential.issuer.didUrl,
+                //issuer: firstCredential.issuer,
                 //credentialSupportedId: firstCredential.credentialSupportedId,
                 credential: W3cCredential.fromJson({
                   // FIXME: we need to include/cache default contexts in AFJ
@@ -151,32 +153,11 @@ export function getAgentModules(options: {
                   // TODO: should 'VerifiableCredential' be in the issuer metadata type?
                   // FIXME: jwt verification did not fail when this was array within array
                   // W3cCredential is not validated in AFJ???
-                  type: ['VerifiableCredential', ...firstCredential.credentialSupportedId],
+                  type: ['VerifiableCredential', firstCredential.credentialSupportedId],
                   issuanceDate: new Date().toISOString(),
-                  //issuer: parseDid(issuerDidUrl).did,
+                  issuer: parseDid(firstCredential.issuer.didUrl).did,
                   credentialSubject: {
-                    //id: parseDid(holderBinding.didUrl).did,
-                    playground: {
-                      framework: 'Aries Framework JavaScript',
-                      language: 'TypeScript',
-                      version: '1.0',
-                      createdBy: 'Animo Solutions',
-                    },
-                  },
-                }),
-                payload: W3cCredential.fromJson({
-                  // FIXME: we need to include/cache default contexts in AFJ
-                  // It quite slow the first time now
-                  // And not secure
-                  '@context': ['https://www.w3.org/2018/credentials/v1'],
-                  // TODO: should 'VerifiableCredential' be in the issuer metadata type?
-                  // FIXME: jwt verification did not fail when this was array within array
-                  // W3cCredential is not validated in AFJ???
-                  type: ['VerifiableCredential', ...firstCredential.credentialSupportedId],
-                  issuanceDate: new Date().toISOString(),
-                  //issuer: parseDid(issuerDidUrl).did,
-                  credentialSubject: {
-                    //id: parseDid(holderBinding.didUrl).did,
+                    id: parseDid(holderDid.didUrl).did,
                     playground: {
                       framework: 'Aries Framework JavaScript',
                       language: 'TypeScript',

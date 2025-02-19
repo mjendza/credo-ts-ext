@@ -10,7 +10,7 @@ const run = async () => {
     inboundTransports: [
       {
         transport: 'http',
-        port: 3001,
+        port: 5000,
       },
     ],
     logLevel: LogLevel.debug,
@@ -32,7 +32,7 @@ const run = async () => {
 
   const { start } = await setupApp({
     baseApp: app,
-    adminPort: 5000,
+    adminPort: 5001,
     enableCors: true,
 
     agent,
