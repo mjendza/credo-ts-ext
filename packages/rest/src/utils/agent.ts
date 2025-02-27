@@ -139,6 +139,7 @@ export function getAgentModules(options: {
             }
             if (firstCredential.format === 'jwt_vc_json') {
               const holderDid = holderBinding as OpenId4VcCredentialHolderDidBinding
+              var payload = firstCredential.payload
               return {
                 format: firstCredential.format === 'jwt_vc_json' ? 'jwt_vc' : 'ldp_vc',
                 holder: holderBinding,
@@ -158,12 +159,7 @@ export function getAgentModules(options: {
                   issuer: parseDid(firstCredential.issuer.didUrl).did,
                   credentialSubject: {
                     id: parseDid(holderDid.didUrl).did,
-                    playground: {
-                      framework: 'Aries Framework JavaScript',
-                      language: 'TypeScript',
-                      version: '1.0',
-                      createdBy: 'Animo Solutions',
-                    },
+                    framework: 'Aries Framework JavaScript',
                   },
                 }),
               }
